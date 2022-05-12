@@ -8,10 +8,15 @@ class WeatherModel {
       await location.getCurrentLocation();
       Networkhelper networkhelper = Networkhelper(
           latitude: location.latitude, longitude: location.longitude);
-      return await networkhelper.getData();
+      return await networkhelper.getDataCoords();
     } catch (e) {
       print('Weather.dart crash: $e');
     }
+  }
+
+  Future<dynamic> getcityWeather(String typedCityName) async {
+    Networkhelper networkhelper = Networkhelper(cityName: typedCityName);
+    return await networkhelper.getDataByCityName();
   }
 
   String getWeatherIcon(int condition) {

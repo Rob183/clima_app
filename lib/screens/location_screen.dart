@@ -86,11 +86,18 @@ class _LocationScreenState extends State<LocationScreen> {
                       foregroundColor:
                           MaterialStateProperty.all<Color>(Colors.white),
                     ),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return CityScreen();
-                      }));
+                    onPressed: () async {
+                      var typedName = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return CityScreen();
+                          },
+                        ),
+                      );
+                      if (typedName != null) {
+                        updateUI(await weatherModel.getcityWeather(typedName));
+                      }
                     },
                     child: const Icon(
                       Icons.location_city,
