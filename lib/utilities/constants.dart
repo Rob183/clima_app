@@ -18,3 +18,12 @@ const kButtonTextStyle = TextStyle(
 const kConditionTextStyle = TextStyle(
   fontSize: 100.0,
 );
+
+// kFlatButtonStyle(width, height) {
+//   ButtonStyle flatButtonStyle = TextButton.styleFrom(
+    
+//     minimumSize: Size(width, height),
+//     padding: EdgeInsets.all(0),
+//   );
+//   return flatButtonStyle;
+// }

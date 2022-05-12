@@ -1,4 +1,19 @@
+import 'package:clima/services/networking.dart';
+import 'package:clima/services/location.dart';
+
 class WeatherModel {
+  Future<dynamic> getLocationWeather() async {
+    try {
+      Location location = Location();
+      await location.getCurrentLocation();
+      Networkhelper networkhelper = Networkhelper(
+          latitude: location.latitude, longitude: location.longitude);
+      return await networkhelper.getData();
+    } catch (e) {
+      print('Weather.dart crash: $e');
+    }
+  }
+
   String getWeatherIcon(int condition) {
     if (condition < 300) {
       return '🌩';

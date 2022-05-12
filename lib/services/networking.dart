@@ -14,7 +14,7 @@ class Networkhelper {
     http.Response response = await http.get(httpsUrl);
 
     response.statusCode == 200
-        ? print(response.body)
+        ? print('API request complete')
         : print("Statuscode failed " + response.statusCode.toString());
 
     return jsonDecode(response.body);

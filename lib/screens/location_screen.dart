@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
+import 'package:clima/services/weather.dart';
+import 'city_screen.dart';
 
 class LocationScreen extends StatefulWidget {
   LocationScreen({this.weatherData});
@@ -11,9 +13,12 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
+  WeatherModel weatherModel = WeatherModel();
+
   int temperature;
   String cityName;
-  int condition;
+  String icon;
+  String message;
 
   @override
   void initState() {
@@ -22,10 +27,22 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   void updateUI(dynamic weatherData) {
-    condition = weatherData['weather'][0]['id'];
-    cityName = weatherData['name'];
-    double temp = weatherData['main']['temp'];
-    temperature = temp.toInt();
+    setState(() {
+      if (weatherData == null) {
+        temperature = 0;
+        cityName = '';
+        icon = 'not available';
+        message = '';
+        return;
+      }
+      int condition = weatherData['weather'][0]['id'];
+      cityName = weatherData['name'];
+      double temp = weatherData['main']['temp'];
+      temperature = temp.toInt();
+
+      icon = weatherModel.getWeatherIcon(condition);
+      message = weatherModel.getMessage(temperature);
+    });
   }
 
   @override
@@ -49,16 +66,33 @@ class _LocationScreenState extends State<LocationScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  FlatButton(
-                    onPressed: () {},
-                    child: Icon(
+                  TextButton(
+                    // style: kFlatButtonStyle(12, 14),
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
+                    ),
+                    onPressed: () async {
+                      updateUI(await weatherModel.getLocationWeather());
+                    },
+                    child: const Icon(
                       Icons.near_me,
                       size: 50.0,
                     ),
                   ),
-                  FlatButton(
-                    onPressed: () {},
-                    child: Icon(
+                  TextButton(
+                    // style: kFlatButtonStyle(12, 14),
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return CityScreen();
+                      }));
+                    },
+                    child: const Icon(
                       Icons.location_city,
                       size: 50.0,
                     ),
@@ -74,7 +108,7 @@ class _LocationScreenState extends State<LocationScreen> {
                       style: kTempTextStyle,
                     ),
                     Text(
-                      '☀️$',
+                      icon,
                       style: kConditionTextStyle,
                     ),
                   ],
@@ -83,7 +117,7 @@ class _LocationScreenState extends State<LocationScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 15.0),
                 child: Text(
-                  "It's 🍦 time in $cityName!",
+                  '$message in $cityName!',
                   textAlign: TextAlign.right,
                   style: kMessageTextStyle,
                 ),

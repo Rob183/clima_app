@@ -1,8 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructor
 
+import 'package:clima/services/weather.dart';
 import 'package:flutter/material.dart';
-import '../services/location.dart';
-import 'package:clima/services/networking.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'location_screen.dart';
 
@@ -22,13 +21,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void getLocationData() async {
-    Location location = Location();
-    await location.getCurrentLocation();
-
-    Networkhelper networkhelper = Networkhelper(
-        latitude: location.latitude, longitude: location.longitude);
-    var locationData = await networkhelper.getData();
-    print(locationData['name']);
+    var locationData = await WeatherModel().getLocationWeather();
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return LocationScreen(
